@@ -1,4 +1,5 @@
 /database/* filter=git-crypt diff=git-crypt
+*.asc filter=git-crypt diff=git-crypt
 
 /database/*.yml !filter !diff
 

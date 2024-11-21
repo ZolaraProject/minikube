@@ -1,0 +1,43 @@
+- name: Define the base workspace
+  stat:
+    path: "{{ base_work_dir }}"
+  register: base_workspace
+
+- name: Create the base workspace if it does not exist
+  ansible.builtin.file:
+    path: "{{ base_work_dir }}"
+    state: directory
+  when: not base_workspace.stat.exists
+
+- name: Define the workspace
+  stat:
+    path: "{{ work_dir }}"
+  register: workspace
+  when: base_workspace.stat.exists
+
+- name: Create the base workspace if it does not exist
+  ansible.builtin.file:
+    path: "{{ work_dir }}"
+    state: directory
+  when: not workspace.stat.exists
+
+- name: Clone the db repository
+  ansible.builtin.git:
+    repo: "{{ git_base_url }}db.git"
+    dest: "{{ work_dir }}/db"
+    single_branch: yes
+    version: main
+
+- name: Clone the front repository
+  ansible.builtin.git:
+    repo: "{{ git_base_url }}front.git"
+    dest: "{{ work_dir }}/front"
+    single_branch: yes
+    version: main
+
+- name: Clone the back repository
+  ansible.builtin.git:
+    repo: "{{ git_base_url }}back.git"
+    dest: "{{ work_dir }}/back"
+    single_branch: yes
+    version: develop

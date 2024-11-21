@@ -1,0 +1,7 @@
+---
+- name: Init project
+  hosts: localhost
+  become: yes
+  roles:
+    - role: clone-repo
+    - role: build-project
