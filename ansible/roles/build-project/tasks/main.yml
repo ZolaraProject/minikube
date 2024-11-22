@@ -1,52 +1,20 @@
-- name: Copy the GPG key to the workspace
-  copy:
-    src: ansible.asc
-    dest: /tmp/ansible.asc
-
-- name: Import the GPG key
-  ansible.builtin.shell:
-    cmd: |
-      gpg --import /tmp/ansible.asc
-  args:
-    executable: /bin/bash
-
-- name: Unlock the db repository
-  ansible.builtin.shell:
-    cmd: git-crypt unlock
-  args:
-    chdir: "{{ work_dir }}/db"
-
-- name: Import the GPG key
-  ansible.builtin.shell:
-    cmd: |
-      gpg --import /tmp/ansible.asc
-  args:
-    executable: /bin/bash
-
-- name: Unlock the back repository
-  ansible.builtin.shell:
-    cmd: git-crypt unlock
-  args:
-    chdir: "{{ work_dir }}/back"
-
 - name: Build db image running ./runDB.sh script in db directory
   ansible.builtin.shell:
     cmd: ./runDB.sh
   args:
     chdir: "{{ work_dir }}/db"
+  become_user: root
 
 - name: Build front image
   community.docker.docker_image_build:
     name: front:ZOLARA_TAG
     path: "{{ work_dir }}/front"
     dockerfile: Dockerfile
+  become_user: root
 
 - name: Run docker compose in the back directory
   community.docker.docker_compose_v2:
     project_src: "{{ work_dir }}/back"
     state: present
     build: always
-
-# - name: Build front image with docker build and with the tag ZOLARA_TAG
-#   ansible.builtin.shell:
-#     cmd: docker build -t front:{{ ZOLARA_TAG }} ./front
+  become_user: root

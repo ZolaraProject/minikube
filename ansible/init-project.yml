@@ -1,7 +1,8 @@
 ---
 - name: Init project
-  hosts: localhost
+  hosts: vm_epitech
   become: yes
   roles:
     - role: clone-repo
+    - role: unlock-repositories
     - role: build-project
