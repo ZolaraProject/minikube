@@ -40,4 +40,4 @@
     repo: "{{ git_base_url }}back.git"
     dest: "{{ work_dir }}/back"
     single_branch: yes
-    version: develop
+    version: main
