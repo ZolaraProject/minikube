@@ -1,6 +1,6 @@
 ---
 - name: Init project
-  hosts: vm_epitech
+  hosts: all
   become: yes
   roles:
     - role: clone-repo
