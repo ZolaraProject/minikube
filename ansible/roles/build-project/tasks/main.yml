@@ -12,9 +12,11 @@
     dockerfile: Dockerfile
   become_user: root
 
-- name: Run docker compose in the back directory
+- name: Run production docker compose in the back directory
   community.docker.docker_compose_v2:
     project_src: "{{ work_dir }}/back"
     state: present
     build: always
+    files:
+      - docker-compose.prod.yaml
   become_user: root
