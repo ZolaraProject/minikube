@@ -1,44 +1,8 @@
-- name: Gather the packager facts
-  package_facts:
-
-- name: Check the package gpg
-  ansible.builtin.package:
-    name: gnupg
-    state: present
-  become_user: root
-  when: "'gnupg' not in ansible_facts.packages"
-
-- name: Check the package git-crypt
-  ansible.builtin.package:
-    name: git-crypt
-    state: present
-  become_user: root
-  when: "'git-crypt' not in ansible_facts.packages"
-    
-- name: Copy the GPG key to the workspace
-  copy:
-    src: ansible.asc
-    dest: /tmp/ansible.asc
-
-- name: Import the GPG key
-  ansible.builtin.shell:
-    cmd: |
-      gpg --import /tmp/ansible.asc
-  args:
-    executable: /bin/bash
-
 - name: Unlock the db repository
   ansible.builtin.shell:
     cmd: git-crypt unlock
   args:
     chdir: "{{ work_dir }}/db"
-
-- name: Import the GPG key
-  ansible.builtin.shell:
-    cmd: |
-      gpg --import /tmp/ansible.asc
-  args:
-    executable: /bin/bash
 
 - name: Unlock the back repository
   ansible.builtin.shell:

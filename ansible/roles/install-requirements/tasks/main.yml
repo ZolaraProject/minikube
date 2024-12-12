@@ -1,0 +1,104 @@
+- name: Gather the packager facts
+  package_facts:
+  
+- name: Check the package git
+  ansible.builtin.package:
+    name: git
+    state: present
+  become_user: root
+  when: "'git' not in ansible_facts.packages"
+    
+- name: Copy the ssh key to the workspace
+  copy:
+    src: id_ed25519
+    dest: "~/.ssh/id_ed25519"
+    mode: "0400"
+
+- name: Start the ssh-agent in the background running
+  ansible.builtin.shell:
+    cmd: eval $(ssh-agent -s)
+
+- name: Check the package gpg
+  ansible.builtin.package:
+    name: gnupg
+    state: present
+  become_user: root
+  when: "'gnupg' not in ansible_facts.packages"
+
+- name: Copy the GPG key to the workspace
+  copy:
+    src: ansible.asc
+    dest: /tmp/ansible.asc
+
+- name: Import the GPG key
+  ansible.builtin.shell:
+    cmd: |
+      gpg --import /tmp/ansible.asc
+  args:
+    executable: /bin/bash
+
+- name: Check the package git-crypt
+  ansible.builtin.package:
+    name: git-crypt
+    state: present
+  become_user: root
+  when: "'git-crypt' not in ansible_facts.packages"
+
+# Install docker
+- name: Install curl
+  ansible.builtin.package:
+    name: curl
+    state: present
+  become_user: root
+  when: "'curl' not in ansible_facts.packages"
+- name: Install ca-certificates
+  ansible.builtin.package:
+    name: ca-certificates
+    state: present
+  become_user: root
+  when: "'ca-certificates' not in ansible_facts.packages"
+
+- name: Update the apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become_user: root
+
+- name: Create the directory /etc/apt/keyrings
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+  become_user: root
+
+- name: Download the Docker GPG key
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  become_user: root
+
+- name: Change the permissions of the Docker GPG key
+  ansible.builtin.shell:
+    cmd: chmod a+r /etc/apt/keyrings/docker.asc
+  become_user: root
+
+- name: Add the Docker repository
+  ansible.builtin.shell:
+    cmd: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  become_user: root
+
+- name: Update the apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become_user: root
+
+- name: Install Docker
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+  become_user: root
