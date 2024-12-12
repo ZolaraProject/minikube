@@ -21,6 +21,11 @@
     state: directory
   when: not workspace.stat.exists
 
+- name: add github in known hosts
+  ansible.builtin.shell: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  args:
+    executable: /bin/bash
+
 - name: Clone the db repository
   ansible.builtin.git:
     repo: "{{ git_base_url }}db.git"
