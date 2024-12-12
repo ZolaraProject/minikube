@@ -4,7 +4,7 @@ metadata:
   name: postgres
   namespace: database
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: postgres
@@ -33,9 +33,12 @@ spec:
                   name: postgres-credentials
                   key: password
           resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              cpu: "1"
-              memory: "1Gi"
+              cpu: "500m"
+              memory: "512Mi"
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgresdata
