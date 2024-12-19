@@ -9,3 +9,9 @@
     cmd: git-crypt unlock
   args:
     chdir: "{{ work_dir }}/back"
+
+- name: Unlock the front repository
+  ansible.builtin.shell:
+    cmd: git-crypt unlock
+  args:
+    chdir: "{{ work_dir }}/front"
