@@ -6,5 +6,10 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name:  backend
+  name:  vault
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  api
 ---

@@ -11,7 +11,6 @@ echo "----------------------------------"
 echo "Create namespaces"
 kubectl apply -f ./namespaces.yaml
 
-
 echo "----------------------------------"
 echo "Create PersistentVolumes"
 kubectl apply -f ./persistent-volume
@@ -24,3 +23,4 @@ echo "----------------------------------"
 echo "Create Secrets"
 echo "In namespace database"
 kubectl create secret generic $database_credentials --from-file=username=$database_username_path --from-file=password=$database_password_path -n database --dry-run=client -oyaml | kubectl apply -f -
+kubectl create secret generic $database_credentials --from-file=username=$database_username_path --from-file=password=$database_password_path -n vault --dry-run=client -oyaml | kubectl apply -f -

@@ -1,0 +1,47 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: common
+
+.common: &common
+  upgradeOnChange: true
+
+.common-values: &common-values
+  replicas: "1"
+  logLevel: "DEBUG"
+  lifecycle.preStop.exec.command:
+    - "sleep"
+    - "10"
+  image.repository: "nexuszolara.me"
+  imagePullSecrets:
+  - name: regcred-harbor
+
+.common-vault-values: &common-vault-values
+  <<: *common-values
+  database:
+    host: "postgres.database.svc.cluster.local"
+
+deploy:
+  helm:
+    releases:
+      ############################################
+      #           pki-vault-service           #
+      ############################################
+      - name: "{{.SK_ENV_NAME}}-pki-vault-service"
+        remoteChart: oci://nexuszolara.me/zolara-microservice/pki-vault-service-helm
+        namespace: vault
+        version: "{{.PKI_VAULT_SERVICE_VERSION}}"
+        setValueTemplates:
+          <<: *common-vault-values
+        <<: *common
+
+      ############################################
+      #                 user-api                 #
+      ############################################
+      - name: "{{.SK_ENV_NAME}}-user-api"
+        remoteChart: oci://nexuszolara.me/zolara-microservice/user-api-helm
+        namespace: vault
+        version: "{{.USER_API_VERSION}}"
+        setValueTemplates:
+          <<: *common-vault-values
+        <<: *common
