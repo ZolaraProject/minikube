@@ -1,6 +1,8 @@
 /database/* filter=git-crypt diff=git-crypt
 *.asc filter=git-crypt diff=git-crypt
 id_ed25519 filter=git-crypt diff=git-crypt
+jwtSecretKey filter=git-crypt diff=git-crypt
+harbor.crt filter=git-crypt diff=git-crypt
 
 /database/*.yml !filter !diff
 
