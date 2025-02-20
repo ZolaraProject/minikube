@@ -46,7 +46,6 @@ if [[ ! -f "$envPath/microservices_version.env" ]]; then
 fi
 
 set -o allexport; source "$envPath/microservices_version.env"; set +o allexport
-echo "DEBUG: PKI_VAULT_SERVICE_VERSION=$PKI_VAULT_SERVICE_VERSION envName=$envName"
 
 echo "Starting skaffold deployment"
 
