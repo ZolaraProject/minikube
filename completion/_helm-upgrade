@@ -1,0 +1,27 @@
+#compdef helm-upgrade
+
+api_microservices=("user-api")
+vault_microservices=("pki-vault-service")
+_arguments "-s[The service to upgrade]:service:->service" '-n[The namespace of the release]:namespace:->ns' '-v[The version to deploy]'
+
+case "$state" in
+    ns)
+    (( $+opt_args[-s] )) && service=$opt_args[-s]
+    
+    namespaces=("api" "vault")
+    [[ ${api_microservices[(ie)$service]} -le ${#api_microservices} ]] && namespaces=("api")
+    [[ ${vault_microservices[(ie)$service]} -le ${#vault_microservices} ]] && namespaces=("vault")
+    _values -n , "${namespaces[@]}"
+    ;;
+    
+    service)
+    ns=""
+    (( $+opt_args[-n] )) && ns=$opt_args[-n]
+    
+    microservices=($api_microservices $vault_microservices)
+    
+    [[ "$ns" == "api" ]] && microservices=($api_microservices)
+    [[ "$ns" == "vault" ]] && microservices=($vault_microservices)
+    _values -n , "${microservices[@]}"
+    ;;
+esac

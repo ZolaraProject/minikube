@@ -11,7 +11,7 @@ metadata:
   logLevel: "DEBUG"
   lifecycle.preStop.exec.command:
     - "sleep"
-    - "10"
+    - '"10"'
   image.repository: "nexuszolara.me"
   imagePullSecrets:
   - name: regcred-harbor
@@ -40,7 +40,7 @@ deploy:
       ############################################
       - name: "{{.SK_ENV_NAME}}-user-api"
         remoteChart: oci://nexuszolara.me/zolara-microservice/user-api-helm
-        namespace: vault
+        namespace: api
         version: "{{.USER_API_VERSION}}"
         setValueTemplates:
           <<: *common-vault-values
