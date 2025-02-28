@@ -46,6 +46,7 @@ if [[ ! -f "$envPath/microservices_version.env" ]]; then
 fi
 
 set -o allexport; source "$envPath/microservices_version.env"; set +o allexport
+set -o allexport; source "$envPath/environment.env"; set +o allexport
 
 echo "Starting skaffold deployment"
 

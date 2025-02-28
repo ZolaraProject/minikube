@@ -1,17 +1,19 @@
 #!/bin/bash
 
+secrets_path="./secrets" # base path for secrets
+
 harbor_ca="harbor-ca-cert"
 harbor_ca_path="./harbor.crt"
 
 redis_credentials="redis-credentials"
-redis_password_path="./redis/password"
+redis_password_path="$secrets_path/redis/password"
 redis_helm_name="zolara-redis"
 redis_helm_path="./redis/redis.yaml"
 
 database_config="postgres-config"
 database_credentials="postgres-credentials"
-database_username_path="./database/username"
-database_password_path="./database/password"
+database_username_path="$secrets_path/database/username"
+database_password_path="$secrets_path/database/password"
 database_init_file_path="./database/init.sql"
 
 jwt_secret_key="jwt-secret"

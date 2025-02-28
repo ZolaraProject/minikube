@@ -45,3 +45,16 @@ deploy:
         setValueTemplates:
           <<: *common-vault-values
         <<: *common
+        
+      ############################################
+      #                  redis                   #
+      ############################################
+      - name: "{{.SK_ENV_NAME}}-redis"
+        remoteChart: bitnami/redis
+        namespace: redis
+        version: "{{.REDIS_HELM_VERSION}}"
+        valuesFiles:
+          - "{{ .SK_VALUES_PATH }}/redis.yaml"
+        setValueTemplates:
+          <<: *common-vault-values
+        <<: *common
