@@ -3,8 +3,10 @@
 id_ed25519 filter=git-crypt diff=git-crypt
 jwtSecretKey filter=git-crypt diff=git-crypt
 harbor.crt filter=git-crypt diff=git-crypt
+/redis/password filter=git-crypt diff=git-crypt
 
 /database/*.yml !filter !diff
+
 
 # DO NOT EDIT THE LINE BELOW. It is used by git-crypt to avoid encrypting itself
 .gitattributes !filter !diff
