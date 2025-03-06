@@ -16,6 +16,15 @@ metadata:
   imagePullSecrets:
   - name: regcred-harbor
 
+.common-api-values: &common-api-values
+  <<: *common-values
+  ingress:
+    hosts[0]: "{{.SK_HOST}}"
+    extraAnnotations:
+      nginx\.ingress\.kubernetes\.io/configuration-snippet: |
+        #proxy_set_header l5d-dst-override $service_name.$namespace.svc.cluster.local:$service_port;
+        more_set_headers "Access-Control-Expose-Headers: www-authenticate";
+
 .common-vault-values: &common-vault-values
   <<: *common-values
   database:
@@ -24,6 +33,17 @@ metadata:
 deploy:
   helm:
     releases:
+      ##############################################
+      #             ingress-controller             #
+      ##############################################
+      - name: "{{.SK_ENV_NAME}}-ingress-nginx"
+        remoteChart: ingress-nginx/ingress-nginx
+        namespace: ingress-nginx
+        version: "{{.INGRESS_CONTROLLER_VERSION}}"
+        valuesFiles:
+        - "{{ .SK_VALUES_PATH }}/ingress-nginx.yaml"
+        <<: *common
+
       ############################################
       #           pki-vault-service           #
       ############################################
@@ -43,7 +63,7 @@ deploy:
         namespace: api
         version: "{{.USER_API_VERSION}}"
         setValueTemplates:
-          <<: *common-vault-values
+          <<: *common-api-values
         <<: *common
         
       ############################################
@@ -55,6 +75,4 @@ deploy:
         version: "{{.REDIS_HELM_VERSION}}"
         valuesFiles:
           - "{{ .SK_VALUES_PATH }}/redis.yaml"
-        setValueTemplates:
-          <<: *common-vault-values
         <<: *common
