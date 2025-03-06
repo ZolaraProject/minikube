@@ -58,7 +58,3 @@ kubectl create secret generic $redis_credentials --from-file=redis-password=$red
 
 echo "In namespace redis"
 kubectl create secret generic $redis_credentials --from-file=redis-password=$redis_password_path -n redis --dry-run=client -oyaml | kubectl apply -f -
-
-echo "----------------------------------"
-echo "Create Redis"
-helm install $redis_helm_name bitnami/redis -f $redis_helm_path -n redis
