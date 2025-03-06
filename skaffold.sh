@@ -36,7 +36,7 @@ kubectl --context $kubecontext create cm deploy -n default --dry-run=client -oya
 echo
 echo "Deploying microservices-version configmap:"
 echo
-kubectl --context $kubecontext get configmap -n api-$deploymentColor microservices-versions > /dev/null 2>&1 && kubectl --context $kubecontext delete configmap -n api microservices-versions
+kubectl --context $kubecontext get configmap -n api microservices-versions > /dev/null 2>&1 && kubectl --context $kubecontext delete configmap -n api microservices-versions
 kubectl --context $kubecontext create configmap microservices-versions --from-file=microservices_version.config=$envPath/microservices_version.env -n api
 
 # Run skaffold
