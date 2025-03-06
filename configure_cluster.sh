@@ -20,6 +20,12 @@ jwt_secret_key="jwt-secret"
 jwt_secret_key_path="./jwtSecretKey"
 
 echo "----------------------------------"
+echo "Add necessary helm repositories"
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+echo "----------------------------------"
 echo "Copy harbor certificate"
 minikube cp -p zolara $harbor_ca_path /etc/docker/certs.d/nexuszolara.me/ca.crt
 minikube cp -p zolara $harbor_ca_path /etc/containerd/certs.d/nexuszolara.me/ca.crt
