@@ -1,1 +1,3 @@
 /ansible/ansible.log
+/environment/**/secrets/docker/config.json
+/openapi
