@@ -56,6 +56,17 @@ deploy:
         <<: *common
 
       ############################################
+      #           breves-vault-service           #
+      ############################################
+      - name: "{{.SK_ENV_NAME}}-breves-vault-service"
+        remoteChart: oci://nexuszolara.me/zolara-microservice/breves-vault-service-helm
+        namespace: vault
+        version: "{{.BREVES_VAULT_SERVICE_VERSION}}"
+        setValueTemplates:
+          <<: *common-vault-values
+        <<: *common
+
+      ############################################
       #                 user-api                 #
       ############################################
       - name: "{{.SK_ENV_NAME}}-user-api"
@@ -65,7 +76,18 @@ deploy:
         setValueTemplates:
           <<: *common-api-values
         <<: *common
-        
+
+      ############################################
+      #                 breves-api               #
+      ############################################
+      - name: "{{.SK_ENV_NAME}}-breves-api"
+        remoteChart: oci://nexuszolara.me/zolara-microservice/breves-api-helm
+        namespace: api
+        version: "{{.BREVES_API_VERSION}}"
+        setValueTemplates:
+          <<: *common-api-values
+        <<: *common
+
       ############################################
       #                  redis                   #
       ############################################
